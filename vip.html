@@ -1,0 +1,116 @@
+<?php include_once('../db.php');?>
+<?php //Start session session_start();
+unset($_SESSION['SESS_MEMBER_ID']); //Unset the variables stored in session
+session_unset(); session_destroy();
+//header('location:o-login.php');?> 
+<!DOCTYPE html> <html lang="en" dir="ltr">
+<title>university online student clearance system website</title> <head>
+<link rel="stylesheet" type="text/css" href="index.css"/></head>
+<body style="background-color: hsla(0, 100%, 90%, 0.3);">
+<?php include('o-header.php'); ?> <div class="mbody"> <div class="mainheader">
+<ul id="topmenu" class="topnav megabar clearfix">
+<li><a href="../index.php"title="Homepage">&nbsp;<b style="color:black;font- size:20px;">HOME</b></a></li>
+<li><a href="../crule.php"title="clearance rule"><b style="color:black;font- size:20px;">&nbsp;clearance rule</b></a></li>
+<li><a href="../notice.php"title="notice"><b style="color:black;font- size:20px;">&nbsp;notice</b></a></li>
+<li><a href="../aboutus.php"title="About us"><b style="color:black;font- size:20px;">&nbsp;about us</b></a></li>
+<li><a href="../feedback.php"title="feedback"><b style="color:black;font- size:20px;">&nbsp;feedback</b></a></li>
+<li><a href="../help.php"title="help"><b style="color:black;font- size:20px;">&nbsp;help</b></a></li>
+<li><a href="../contact.php"title="contact"><b style="color:black;font- size:20px;">&nbsp;contact</b></a></li> </ul>
+</div><!--end of header shown in create account -->
+<div class="full-upper">
+<h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You are here : <a href="o-login.php?officer login
+page"title="officer login page" style=" border-right: 2px solid #bbb;">officer login page
+</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="www.haramaya.edu.et?haramaya university website"title="HU website"style=" borderright: 2px solid #bbb;border-left: 2px solid #bbb;">JINKA UNIVERSITY OFFICIAL
+WEBSITE</a></h4>
+</div><!-- end of the upper full height content part -->
+<div class="slogin"style="height:300px;">
+<h3><b>WELCOME TO OFFICERS LOGIN PAGE</b></h3>
+<img src="image/admin.jpg"alt="admin image"style="height:250px;width:300px;float:left;"/>
+<table>
+<form method="post"name="studentlogin-form"onsubmit="return officer-page()" action="o-logincode.php">
+<tr><td><b> USER-NAME : </b></td> <td > <input type="text" onblur="ufunction()"
+required="required" name="id" id="username" class="username" placeholder="enter your user
+name" style="width:205px;height:35px;" onkeypress='return event.charCode>=47 &&
+event.charCode<=57'></td></tr>
+<tr><td><b>PASSWORD : </b></td> <td > <input type="password"onblur="pfunction()"
+required="required"name="password" id="password" class="password" placeholder="enter your
+security password" style="width:205px;height:35px;"></td></tr>
+<tr><td><b>OFFICER TYPE : </b></td> <td>
+<select name="job_type"class="job-type">
+<option>Select-your-job-type</option>
+<option>Dormitory</option>
+<option>Labirarian</option>
+<option>Book_store</option>
+<option>Cafeteria</option>
+<option>Sport_Science</option>
+<option>Department_Head</option>
+<option>Finance</option> </select> <tr ><td>
+<input type="submit" name="login_button" value="LOGIN"></td>
+<td> <input type="submit"name="reset_button"value="RESET" onclick="reset_button()"></td></tr>
+<tr><td colspan="2"><a href="o_recover_account.php"title="recover
+password"target=""><b> RECOVER YOUR ACCOUNT !!!</b></a></td></tr>
+</form> </table> </div> </div>
+<?php include_once('../db.php'); session_start();
+if(isset($_POST['login_button']))
+{ @$id=$_POST['id'];
+@$password=$_POST['password'];
+$_SESSION['id'] = $id;
+$_SESSION['password'] = $password;
+@$job_type=$_POST['job_type'];
+@$status = $_POST['status']; if ($id == "")
+{ ?> <script type="text/javascript"> alert("YOUR USERNAME IS EMPTY");
+window.location='o-login.php';
+</script> <?php } elseif ($password == "")
+{ ?> <script type="text/javascript">
+alert("YOUR PASSWORD IS EMPTY");
+window.location='o-login.php'; </script> <?php }
+elseif ($job_type == "Select-your-job-type") {
+?> <script type="text/javascript">
+alert("YOUR JOB TYPE IS NOT SELECTED");
+window.location='o-login.php'; </script> <?php } Else {
+@$id= $_POST['id'];
+@$password = $_POST['password'];
+$sql = "SELECT * FROM officer_account WHERE id = '$_SESSION[id]' AND
+password='$_SESSION[password]' AND job_type = '$job_type'";
+$qr = mysql_query($sql);
+$result = mysql_num_rows($qr); if($result>0) {
+while($row = mysql_fetch_array($qr)) {
+$job_type= $row['job_type']; }
+if($job_type!='0')
+{ if($job_type=='Dormitory')
+{ session_write_close();
+header('Location:dorm/dorm_index.php'); exit(); }
+elseif($job_type=='Labirarian')
+{ session_write_close();
+header("Location: labirary/labirary-index.php"); exit(); }
+elseif($job_type=='Book_store')
+{ session_write_close();
+header("Location: bookstore/bookstore_index.php");
+exit(); } elseif($job_type=='Cafeteria') {
+session_write_close();
+header("Location: cafe/cafe_index.php"); exit(); }
+elseif($job_type=='Sport_Science')
+{ session_write_close();
+header("Location: sportscience/sport_index.php");
+exit(); }
+elseif($job_type=='Department_Head')
+{ session_write_close();
+header("Location: department/dept_index.php");
+exit(); }
+elseif($job_type=='Finance')
+{ session_write_close();
+header("Location: finance/finance_index.php");
+exit(); } else { ?> <script>
+alert('YOUR USER NAME AND PASSWORD IS NOT MATCH WITH YOUR ROLE
+Tray again');
+window.location='o-login.php';
+</script> <?php } } Else { ?> <script>
+alert('Your account is disabled Please Contact the Administrator!!! and Tray again');
+window.location='o-login.php';
+</script> <?php } } else
+{ ?> <script>
+alert('Incorrect USER NAME or PASSWORD Pls match and Try again ');
+window.location='o-login.php';
+</script> <?php } } } ?>
+<?php include_once('o-footer.php'); ?> </body> </html>
